@@ -450,16 +450,42 @@
         resultModal.style.display = "none";
         board.innerHTML = "";
 
-        const randomIndex = Math.floor(Math.random() * wordDatabase.length);
-        currentWordObj = wordDatabase[randomIndex];
+        // --- LÓGICA DE NÃO REPETIÇÃO ---
+
+        // 1. Recupera as palavras já jogadas do localStorage
+        let playedWords =
+          JSON.parse(localStorage.getItem("fetishdle_history")) || [];
+
+        // 2. Cria uma lista apenas com palavras que AINDA NÃO foram jogadas
+        let availableWords = wordDatabase.filter(
+          (item) => !playedWords.includes(item.word)
+        );
+
+        // 3. Se não houver mais palavras disponíveis (todas foram jogadas)
+        if (availableWords.length === 0) {
+          alert(
+            "Parabéns! Você completou todas as palavras disponíveis. O histórico será reiniciado."
+          );
+          playedWords = []; // Limpa a memória RAM
+          localStorage.removeItem("fetishdle_history"); // Limpa o navegador
+          availableWords = [...wordDatabase]; // Disponibiliza tudo novamente
+        }
+
+        // 4. Sorteia apenas entre as disponíveis
+        const randomIndex = Math.floor(Math.random() * availableWords.length);
+        currentWordObj = availableWords[randomIndex];
         currentWord = currentWordObj.word.toUpperCase();
+
+        // 5. Salva a palavra sorteada no histórico imediatamente
+        playedWords.push(currentWordObj.word);
+        localStorage.setItem("fetishdle_history", JSON.stringify(playedWords));
+
+        // --- FIM DA LÓGICA DE NÃO REPETIÇÃO ---
 
         hintText.textContent = currentWordObj.hint;
 
         const wordLength = currentWord.length;
 
-        // CORREÇÃO: minmax(0, 50px) impede que os blocos cresçam mais que 50px
-        // mas permite que diminuam se a palavra for longa demais.
         board.style.gridTemplateColumns = `repeat(${wordLength}, minmax(0, 50px))`;
 
         let tileClass = "tile";
