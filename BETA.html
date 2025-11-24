@@ -47,8 +47,7 @@
         flex-direction: column;
         align-items: center;
         margin: 0;
-        /* Correção Mobile: dvh considera a barra de navegação do navegador */
-        height: 100dvh;
+        height: 100dvh; 
         overflow: hidden;
         transition: background-color 0.3s, color 0.3s;
       }
@@ -62,12 +61,12 @@
         max-width: 600px;
         padding: 10px 20px;
         border-bottom: 1px solid var(--border-color);
-        flex-shrink: 0; /* Impede que o header encolha */
+        flex-shrink: 0;
       }
 
       h1 {
         margin: 0;
-        font-size: clamp(18px, 4vw, 24px); /* Fonte responsiva */
+        font-size: clamp(18px, 4vw, 24px);
         letter-spacing: 2px;
       }
 
@@ -79,18 +78,18 @@
         color: var(--text-color);
       }
 
-      /* --- ÁREA CENTRAL (DICA + TABULEIRO) --- */
+      /* --- ÁREA CENTRAL --- */
       #game-container {
-        flex: 1; /* Ocupa todo o espaço disponível entre o header e o teclado */
+        flex: 1;
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center; /* Centraliza verticalmente */
+        justify-content: center;
         width: 100%;
         max-width: 600px;
         padding: 10px;
-        overflow-y: auto; /* Permite scroll apenas se a grade for gigante */
-        min-height: 0; /* Correção para flexbox scroll */
+        overflow-y: auto;
+        min-height: 0;
       }
 
       #hint-container {
@@ -119,20 +118,26 @@
         flex-shrink: 0;
       }
 
-      /* --- TABULEIRO FLUIDO --- */
+      /* --- TABULEIRO --- */
       #game-board {
         display: grid;
         grid-gap: 5px;
         width: 100%;
-        /* Garante que o tabuleiro não estoure a altura disponível */
-        max-height: 100%;
+        max-height: 100%; 
         padding-bottom: 10px;
-        align-content: center; /* Centraliza o conteúdo da grid */
+        align-content: center;
+        
+        /* CORREÇÃO AQUI: Centraliza o grid horizontalmente se a palavra for curta */
+        justify-content: center; 
       }
 
       .tile {
-        aspect-ratio: 1/1;
-        max-height: 100%;
+        width: 100%; 
+        aspect-ratio: 1 / 1;
+        /* Não precisamos mais de max-width aqui, o grid cuida disso, 
+           mas mantemos por segurança */
+        max-width: 50px; 
+        
         border: 2px solid var(--border-color);
         display: flex;
         justify-content: center;
@@ -142,43 +147,21 @@
         text-transform: uppercase;
         user-select: none;
         transition: transform 0.15s, border-color 0.15s, background-color 0.15s;
-        perspective: 1000px;
       }
 
-      /* Responsividade do Texto dentro do Tile */
-      .tile.small-text {
-        font-size: 16px;
-      }
-      .tile.tiny-text {
-        font-size: 12px;
-      }
+      .tile.small-text { font-size: 16px; }
+      .tile.tiny-text { font-size: 12px; }
 
-      /* Ajuste fino para telas muito pequenas */
       @media (max-width: 360px) {
-        #game-board {
-          grid-gap: 3px;
-        }
-        .tile {
-          font-size: 16px;
-          border-width: 1.5px;
-        }
-        .tile.small-text {
-          font-size: 12px;
-        }
-        .tile.tiny-text {
-          font-size: 10px;
-        }
+        #game-board { grid-gap: 3px; }
+        .tile { font-size: 16px; border-width: 1.5px; }
+        .tile.small-text { font-size: 12px; }
+        .tile.tiny-text { font-size: 10px; }
       }
 
       /* --- ANIMAÇÕES --- */
-      .pop {
-        animation: pop 0.1s;
-      }
-      @keyframes pop {
-        50% {
-          transform: scale(1.1);
-        }
-      }
+      .pop { animation: pop 0.1s; }
+      @keyframes pop { 50% { transform: scale(1.1); } }
 
       .flip {
         transform: rotateX(90deg);
@@ -186,56 +169,25 @@
         backface-visibility: hidden;
       }
 
-      .shake {
-        animation: shake 0.5s;
-      }
+      .shake { animation: shake 0.5s; }
       @keyframes shake {
-        0%,
-        100% {
-          transform: translateX(0);
-        }
-        10%,
-        30%,
-        50%,
-        70%,
-        90% {
-          transform: translateX(-4px);
-        }
-        20%,
-        40%,
-        60%,
-        80% {
-          transform: translateX(4px);
-        }
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+        20%, 40%, 60%, 80% { transform: translateX(4px); }
       }
 
-      .correct {
-        background-color: var(--correct);
-        border-color: var(--correct);
-        color: white;
-      }
-      .present {
-        background-color: var(--present);
-        border-color: var(--present);
-        color: white;
-      }
-      .absent {
-        background-color: var(--absent);
-        border-color: var(--absent);
-        color: white;
-      }
+      .correct { background-color: var(--correct); border-color: var(--correct); color: white; }
+      .present { background-color: var(--present); border-color: var(--present); color: white; }
+      .absent { background-color: var(--absent); border-color: var(--absent); color: white; }
 
-      /* --- TECLADO VIRTUAL --- */
+      /* --- TECLADO --- */
       #keyboard-container {
         width: 100%;
         max-width: 600px;
         padding: 5px;
-        padding-bottom: max(
-          10px,
-          env(safe-area-inset-bottom)
-        ); /* Espaço seguro para iPhone */
+        padding-bottom: max(10px, env(safe-area-inset-bottom));
         background-color: var(--default-bg);
-        flex-shrink: 0; /* Impede que o teclado seja esmagado */
+        flex-shrink: 0;
       }
 
       .keyboard-row {
@@ -250,7 +202,7 @@
         font-weight: bold;
         border: 0;
         margin: 0 2px;
-        height: 50px; /* Altura padrão */
+        height: 50px;
         border-radius: 4px;
         cursor: pointer;
         user-select: none;
@@ -262,45 +214,21 @@
         align-items: center;
         text-transform: uppercase;
         font-size: 13px;
-        touch-action: manipulation; /* Melhora resposta ao toque */
+        touch-action: manipulation;
       }
 
-      /* Ajuste altura do teclado em telas pequenas */
       @media (max-height: 650px) {
-        .key {
-          height: 42px;
-          font-size: 12px;
-        }
-        #hint-container {
-          padding: 4px 10px;
-          font-size: 12px;
-          margin-bottom: 5px;
-        }
-        h1 {
-          font-size: 18px;
-        }
+        .key { height: 42px; font-size: 12px; }
+        #hint-container { padding: 4px 10px; font-size: 12px; margin-bottom: 5px;}
+        h1 { font-size: 18px; }
       }
 
-      .key:active {
-        transform: scale(0.95);
-      }
-      .key-wide {
-        flex: 1.5;
-        font-size: 11px;
-      }
+      .key:active { transform: scale(0.95); }
+      .key-wide { flex: 1.5; font-size: 11px; }
 
-      .key.correct {
-        background-color: var(--correct);
-        border-color: var(--correct);
-      }
-      .key.present {
-        background-color: var(--present);
-        border-color: var(--present);
-      }
-      .key.absent {
-        background-color: var(--absent);
-        border-color: var(--absent);
-      }
+      .key.correct { background-color: var(--correct); border-color: var(--correct); }
+      .key.present { background-color: var(--present); border-color: var(--present); }
+      .key.absent { background-color: var(--absent); border-color: var(--absent); }
 
       /* --- MODAL --- */
       #result-modal {
@@ -326,14 +254,8 @@
         animation: slideUp 0.3s ease-out;
       }
       @keyframes slideUp {
-        from {
-          transform: translateY(20px);
-          opacity: 0;
-        }
-        to {
-          transform: translateY(0);
-          opacity: 1;
-        }
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
       }
       button.restart-btn {
         margin-top: 20px;
@@ -382,45 +304,27 @@
         { word: "FOOTFETISH", hint: "Podolatria: fetiche por pés" },
         { word: "VOYEURISM", hint: "Prazer em espiar outros transando" },
         { word: "CUCKOLD", hint: "Excitação ao ver parceira com outro homem" },
-        {
-          word: "GANGBANG",
-          hint: "Uma pessoa com múltiplos parceiros ao mesmo tempo",
-        },
+        { word: "GANGBANG", hint: "Uma pessoa com múltiplos parceiros ao mesmo tempo" },
         { word: "SUBMISSION", hint: "Prazer em se submeter e obedecer" },
-        {
-          word: "DOMINATION",
-          hint: "Prazer em comandar e controlar o parceiro",
-        },
+        { word: "DOMINATION", hint: "Prazer em comandar e controlar o parceiro" },
         { word: "BONDAGE", hint: "Amarrar com cordas, algemas ou restrições" },
         { word: "SPANKING", hint: "Dar palmadas fortes na bunda para prazer" },
         { word: "PEGGING", hint: "Mulher penetrando o homem com strap-on" },
         { word: "ROLEPLAY", hint: "Fingir ser outros personagens ou cenários" },
-        {
-          word: "EDGING",
-          hint: "Levar ao limite do orgasmo e parar repetidamente",
-        },
+        { word: "EDGING", hint: "Levar ao limite do orgasmo e parar repetidamente" },
         { word: "FACESITTING", hint: "Sentar no rosto do parceiro para oral" },
         { word: "JOI", hint: "Ordens para se masturbar" },
-        {
-          word: "CHASTITY",
-          hint: "Cinto ou gaiola para impedir ereção e orgasmo",
-        },
+        { word: "CHASTITY", hint: "Cinto ou gaiola para impedir ereção e orgasmo" },
         { word: "DEGRADATION", hint: "Humilhação verbal ou física" },
         { word: "MASOCHISM", hint: "Prazer em receber dor ou sofrimento" },
         { word: "SADISM", hint: "Prazer em causar dor no parceiro" },
         { word: "FISTING", hint: "Inserir toda a mão na vagina ou ânus" },
         { word: "GOLDENSHOWER", hint: "Urinar no corpo do parceiro" },
-        {
-          word: "LATEX",
-          hint: "Roupas justas de látex para sensação de restrição",
-        },
+        { word: "LATEX", hint: "Roupas justas de látex para sensação de restrição" },
         { word: "LEATHER", hint: "Fetiche por couro e roupas de couro" },
         { word: "PETPLAY", hint: "Fingir ser um pet como cachorro ou gato" },
         { word: "WAXPLAY", hint: "Pingar cera quente no corpo" },
-        {
-          word: "ASMR",
-          hint: "Sons sussurrados eróticos para relaxamento sensual",
-        },
+        { word: "ASMR", hint: "Sons sussurrados eróticos para relaxamento sensual" },
         { word: "SPH", hint: "Humilhação por pênis pequeno" },
         { word: "EXHIBITIONISM", hint: "Mostrar o corpo nu em público" },
       ];
@@ -434,7 +338,6 @@
       let isAnimating = false;
       const maxGuesses = 6;
 
-      /* --- ELEMENTOS --- */
       const board = document.getElementById("game-board");
       const messageArea = document.getElementById("message-area");
       const hintText = document.getElementById("hint-text");
@@ -444,7 +347,6 @@
       const keyboardContainer = document.getElementById("keyboard-container");
       const themeIcon = document.getElementById("theme-icon");
 
-      /* --- INICIALIZAÇÃO --- */
       function initGame() {
         currentRow = 0;
         currentTile = 0;
@@ -460,11 +362,12 @@
 
         hintText.textContent = currentWordObj.hint;
 
-        // Configura Grid
         const wordLength = currentWord.length;
-        board.style.gridTemplateColumns = `repeat(${wordLength}, 1fr)`;
 
-        // Ajuste de classes de texto baseado no tamanho da palavra
+        // CORREÇÃO: minmax(0, 50px) impede que os blocos cresçam mais que 50px
+        // mas permite que diminuam se a palavra for longa demais.
+        board.style.gridTemplateColumns = `repeat(${wordLength}, minmax(0, 50px))`;
+
         let tileClass = "tile";
         if (wordLength > 10) tileClass += " small-text";
         if (wordLength > 14) tileClass += " tiny-text";
@@ -479,7 +382,6 @@
         createKeyboard();
       }
 
-      /* --- TEMA --- */
       function toggleTheme() {
         const html = document.documentElement;
         const current = html.getAttribute("data-theme");
@@ -492,7 +394,6 @@
         }
       }
 
-      /* --- TECLADO VIRTUAL --- */
       function createKeyboard() {
         keyboardContainer.innerHTML = "";
         const layout = ["QWERTYUIOP", "ASDFGHJKLÇ", "ZXCVBNM"];
@@ -532,7 +433,6 @@
         return btn;
       }
 
-      /* --- INPUT --- */
       document.addEventListener("keydown", (e) => {
         const key = e.key.toUpperCase();
         if (key === "ENTER" || key === "BACKSPACE") handleInput(key);
@@ -541,7 +441,6 @@
 
       function handleInput(key) {
         if (isGameOver || isAnimating) return;
-
         if (key === "ENTER") checkRow();
         else if (key === "BACKSPACE") deleteLetter();
         else addLetter(key);
@@ -554,7 +453,7 @@
           tile.textContent = letter;
           tile.classList.add("pop");
           setTimeout(() => tile.classList.remove("pop"), 100);
-          tile.style.borderColor = "var(--present)"; // Feedback visual de seleção
+          tile.style.borderColor = "var(--present)";
           currentTile++;
           if (messageArea.textContent) messageArea.textContent = "";
         }
@@ -571,7 +470,6 @@
         }
       }
 
-      /* --- LÓGICA E ANIMAÇÃO --- */
       function checkRow() {
         const wordLength = currentWord.length;
         if (currentTile !== (currentRow + 1) * wordLength) {
@@ -585,16 +483,13 @@
         const startTileId = currentRow * wordLength;
 
         for (let i = 0; i < wordLength; i++) {
-          guess += document.getElementById(
-            `tile-${startTileId + i}`
-          ).textContent;
+          guess += document.getElementById(`tile-${startTileId + i}`).textContent;
         }
 
         const guessArray = guess.split("");
         const wordArray = currentWord.split("");
         const tileStatus = new Array(wordLength).fill("absent");
 
-        // Verifica corretos (Verde)
         for (let i = 0; i < wordLength; i++) {
           if (guessArray[i] === wordArray[i]) {
             tileStatus[i] = "correct";
@@ -602,7 +497,6 @@
             guessArray[i] = null;
           }
         }
-        // Verifica presentes (Amarelo)
         for (let i = 0; i < wordLength; i++) {
           if (guessArray[i] && wordArray.includes(guessArray[i])) {
             tileStatus[i] = "present";
@@ -610,7 +504,6 @@
           }
         }
 
-        // Animação
         for (let i = 0; i < wordLength; i++) {
           const tile = document.getElementById(`tile-${startTileId + i}`);
           const letter = tile.textContent;
@@ -629,7 +522,7 @@
             if (i === wordLength - 1) {
               endTurnLogic(guess);
             }
-          }, i * 100 + 250); // Aumentei um pouco o tempo para suavizar o flip
+          }, i * 100 + 250);
         }
       }
 
@@ -643,11 +536,7 @@
         } else if (status === "present" && !currentClass.contains("correct")) {
           keyBtn.classList.remove("absent");
           keyBtn.classList.add("present");
-        } else if (
-          status === "absent" &&
-          !currentClass.contains("correct") &&
-          !currentClass.contains("present")
-        ) {
+        } else if (status === "absent" && !currentClass.contains("correct") && !currentClass.contains("present")) {
           keyBtn.classList.add("absent");
         }
       }
@@ -659,10 +548,7 @@
           isGameOver = true;
         } else {
           if (currentRow >= maxGuesses - 1) {
-            setTimeout(
-              () => showResult("FIM DE JOGO", `A palavra era: ${currentWord}`),
-              500
-            );
+            setTimeout(() => showResult("FIM DE JOGO", `A palavra era: ${currentWord}`), 500);
             isGameOver = true;
           } else {
             currentRow++;
@@ -682,9 +568,7 @@
 
       function showMessage(msg) {
         messageArea.textContent = msg;
-        setTimeout(() => {
-          if (!isGameOver) messageArea.textContent = "";
-        }, 2000);
+        setTimeout(() => { if (!isGameOver) messageArea.textContent = ""; }, 2000);
       }
 
       function showResult(title, text) {
